@@ -1,22 +1,32 @@
 {
-  "name": "Hello Extensions",
-  "description": "Base Level Extension",
-  "version": "1.0",
+  "name": "WebTracker",
+  "description": "Rozšírenie pre Chrome, ktoré zobrazuje aktuálny tok dát na otvorenom webe a prehľad webov s časom stráveným prehliadaním.",
+  "version": "1.0.0",
   "manifest_version": 3,
   "background": {
     "service_worker": "service_worker.js"
   },
   "host_permissions": [
-    "https://*.supabase.co/*",
-    "https://*.supabase.in/*"
+    "https://whryujjatvqqrlawmxqy.supabase.co/*"
   ],
   "permissions": [
     "debugger",
     "tabs",
     "storage"
   ],
+  "icons": {
+    "16": "Icons/16x16.png",
+    "32": "Icons/32x32.png",
+    "48": "Icons/48x48.png",
+    "128": "Icons/128x128.png"
+  },
   "action": {
     "default_popup": "settings.html",
-    "default_icon": "hello_extensions.png"
+    "default_icon": {
+      "16": "Icons/16x16.png",
+      "32": "Icons/32x32.png",
+      "48": "Icons/48x48.png",
+      "128": "Icons/128x128.png"
+    }
   }
 }
