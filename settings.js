@@ -1,6 +1,8 @@
 const THEME_MODE_KEY = 'themeMode';
 const AUTO_THEME_KEY = 'autoTheme';
 
+const LANGUAGE_KEY = 'language';
+
 const INSTALL_ID_KEY = 'installId';
 
 const HARDCODED_SUPABASE_URL = 'https://whryujjatvqqrlawmxqy.supabase.co';
@@ -8,6 +10,187 @@ const HARDCODED_SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3
 
 const SUPABASE_VIEW = 'v_host_time_by_user';
 const PAGE_SIZE = 5;
+
+const I18N = {
+  en: {
+    analytics_title: 'Website analytics',
+    prev: 'Prev',
+    next: 'Next',
+    site: 'Site',
+    speed: 'Speed',
+    status: 'Status',
+    ping: 'Ping',
+    language: 'Language',
+    theme: 'Theme',
+    theme_auto: 'Auto',
+    theme_dark: 'Dark',
+    theme_light: 'Light',
+    quit: 'Quit',
+    settings: 'Settings',
+    total: 'Total',
+    page: 'Page',
+    analytics_not_available: 'Analytics not available',
+    auth_not_ready: 'Auth not ready (no access token). Check Supabase Email provider + Confirm email OFF.',
+    worker_not_available: 'Worker not available',
+    status_measuring: 'Measuring',
+    status_idle: 'Idle',
+    status_error: 'Error',
+  },
+  de: {
+    analytics_title: 'Website-Analyse',
+    prev: 'Zurück',
+    next: 'Weiter',
+    site: 'Website',
+    speed: 'Geschwindigkeit',
+    status: 'Status',
+    ping: 'Ping',
+    language: 'Sprache',
+    theme: 'Design',
+    theme_auto: 'Auto',
+    theme_dark: 'Dunkel',
+    theme_light: 'Hell',
+    quit: 'Beenden',
+    settings: 'Einstellungen',
+    total: 'Gesamt',
+    page: 'Seite',
+    analytics_not_available: 'Analyse nicht verfügbar',
+    auth_not_ready: 'Authentifizierung nicht bereit (kein Zugriffstoken). Prüfe: E-Mail-Provider aktiv + E-Mail-Bestätigung AUS.',
+    worker_not_available: 'Worker nicht verfügbar',
+    status_measuring: 'Messung',
+    status_idle: 'Leerlauf',
+    status_error: 'Fehler',
+  },
+  fr: {
+    analytics_title: 'Statistiques des sites',
+    prev: 'Préc.',
+    next: 'Suiv.',
+    site: 'Site',
+    speed: 'Vitesse',
+    status: 'Statut',
+    ping: 'Ping',
+    language: 'Langue',
+    theme: 'Thème',
+    theme_auto: 'Auto',
+    theme_dark: 'Sombre',
+    theme_light: 'Clair',
+    quit: 'Quitter',
+    settings: 'Paramètres',
+    total: 'Total',
+    page: 'Page',
+    analytics_not_available: 'Statistiques indisponibles',
+    auth_not_ready: "Authentification non prête (aucun jeton d'accès). Vérifie : fournisseur Email activé + confirmation email désactivée.",
+    worker_not_available: 'Worker indisponible',
+    status_measuring: 'Mesure',
+    status_idle: 'Inactif',
+    status_error: 'Erreur',
+  },
+  es: {
+    analytics_title: 'Analítica de sitios',
+    prev: 'Anterior',
+    next: 'Siguiente',
+    site: 'Sitio',
+    speed: 'Velocidad',
+    status: 'Estado',
+    ping: 'Ping',
+    language: 'Idioma',
+    theme: 'Tema',
+    theme_auto: 'Auto',
+    theme_dark: 'Oscuro',
+    theme_light: 'Claro',
+    quit: 'Salir',
+    settings: 'Ajustes',
+    total: 'Total',
+    page: 'Página',
+    analytics_not_available: 'Analítica no disponible',
+    auth_not_ready: 'Autenticación no lista (sin token de acceso). Revisa: proveedor Email activo + confirmación de email desactivada.',
+    worker_not_available: 'Worker no disponible',
+    status_measuring: 'Midiendo',
+    status_idle: 'Inactivo',
+    status_error: 'Error',
+  },
+  it: {
+    analytics_title: 'Analisi dei siti',
+    prev: 'Prec.',
+    next: 'Succ.',
+    site: 'Sito',
+    speed: 'Velocità',
+    status: 'Stato',
+    ping: 'Ping',
+    language: 'Lingua',
+    theme: 'Tema',
+    theme_auto: 'Auto',
+    theme_dark: 'Scuro',
+    theme_light: 'Chiaro',
+    quit: 'Chiudi',
+    settings: 'Impostazioni',
+    total: 'Totale',
+    page: 'Pagina',
+    analytics_not_available: 'Analisi non disponibile',
+    auth_not_ready: "Autenticazione non pronta (nessun token d'accesso). Controlla: provider Email attivo + conferma email disattivata.",
+    worker_not_available: 'Worker non disponibile',
+    status_measuring: 'Misurazione',
+    status_idle: 'Inattivo',
+    status_error: 'Errore',
+  },
+  sk: {
+    analytics_title: 'Sledovanosť stránok',
+    prev: 'Späť',
+    next: 'Ďalej',
+    site: 'Stránka',
+    speed: 'Rýchlosť',
+    status: 'Stav',
+    ping: 'Ping',
+    language: 'Jazyk',
+    theme: 'Téma',
+    theme_auto: 'Auto',
+    theme_dark: 'Tmavá',
+    theme_light: 'Svetlá',
+    quit: 'Ukončiť',
+    settings: 'Nastavenia',
+    total: 'Spolu',
+    page: 'Strana',
+    analytics_not_available: 'Štatistiky nie sú dostupné',
+    auth_not_ready: 'Prihlásenie nie je pripravené (chýba access token). Skontroluj: Email provider zapnutý + Confirm email vypnuté.',
+    worker_not_available: 'Worker nie je dostupný',
+    status_measuring: 'Meranie',
+    status_idle: 'Nečinné',
+    status_error: 'Chyba',
+  },
+};
+
+let currentLang = 'en';
+
+function t(key) {
+  const dict = I18N[currentLang] || I18N.en;
+  return dict[key] || I18N.en[key] || key;
+}
+
+async function getLanguage() {
+  const result = await chrome.storage.sync.get({ [LANGUAGE_KEY]: 'en' });
+  const v = result[LANGUAGE_KEY];
+  return typeof v === 'string' && I18N[v] ? v : 'en';
+}
+
+async function setLanguage(value) {
+  const v = typeof value === 'string' && I18N[value] ? value : 'en';
+  await chrome.storage.sync.set({ [LANGUAGE_KEY]: v });
+  currentLang = v;
+}
+
+function applyTranslations(root = document) {
+  const nodes = root.querySelectorAll('[data-i18n]');
+  for (const el of nodes) {
+    const key = el.getAttribute('data-i18n');
+    if (!key) continue;
+    el.textContent = t(key);
+  }
+  const ariaNodes = root.querySelectorAll('[data-i18n-aria-label]');
+  for (const el of ariaNodes) {
+    const key = el.getAttribute('data-i18n-aria-label');
+    if (!key) continue;
+    el.setAttribute('aria-label', t(key));
+  }
+}
 
 function safeRandomId() {
   return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -171,7 +354,7 @@ async function fetchAnalytics() {
   if (!cfg.url || !cfg.anonKey) return { ok: false, error: 'Missing Supabase config' };
 
   const accessToken = await getSupabaseAccessTokenFromWorker();
-  if (!accessToken) return { ok: false, error: 'Auth not ready (no access token). Check Supabase Email provider + Confirm email OFF.' };
+  if (!accessToken) return { ok: false, error: t('auth_not_ready') };
 
   const base = cfg.url.replace(/\/+$/, '');
   const endpoint = `${base}/rest/v1/${encodeURIComponent(SUPABASE_VIEW)}?select=host,total_duration_ms,sessions&order=total_duration_ms.desc`;
@@ -205,6 +388,10 @@ async function getStatusFromWorker() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+  currentLang = await getLanguage();
+  applyTranslations(document);
+
+  const languageSelect = document.getElementById('language');
   const select = document.getElementById('themeMode');
   const settingsBtn = document.getElementById('settingsBtn');
   const settingsPanel = document.getElementById('settingsPanel');
@@ -235,7 +422,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (pagerEl && pagerInfoEl && prevBtn && nextBtn) {
       pagerEl.style.display = totalItems > PAGE_SIZE ? 'flex' : 'none';
-      pagerInfoEl.textContent = `Page ${pageIndex + 1}/${totalPages}`;
+      pagerInfoEl.textContent = `${t('page')} ${pageIndex + 1}/${totalPages}`;
       prevBtn.disabled = pageIndex <= 0;
       nextBtn.disabled = pageIndex >= totalPages - 1;
     }
@@ -264,7 +451,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         legendEl.innerHTML = '';
         const row = document.createElement('div');
         row.className = 'k';
-        row.textContent = 'Analytics not available';
+        row.textContent = t('analytics_not_available');
         row.title = result.error;
         legendEl.appendChild(row);
 
@@ -286,7 +473,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       .filter((r) => r.host && Number(r.total_duration_ms) > 0);
 
     const totalMs = analyticsRows.reduce((sum, r) => sum + (Number(r.total_duration_ms) || 0), 0);
-    if (totalTimeEl) totalTimeEl.textContent = `Total ${formatDuration(totalMs)}`;
+    if (totalTimeEl) totalTimeEl.textContent = `${t('total')} ${formatDuration(totalMs)}`;
 
     renderPage();
   };
@@ -300,6 +487,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (quitBtn) {
     quitBtn.addEventListener('click', () => {
       window.close();
+    });
+  }
+
+  if (languageSelect) {
+    languageSelect.value = currentLang;
+    languageSelect.addEventListener('change', async () => {
+      await setLanguage(languageSelect.value);
+      applyTranslations(document);
+      renderPage();
+      await refreshAnalytics();
+      await refresh();
     });
   }
 
@@ -333,14 +531,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!status) {
       setText('site', '-');
       setText('speed', '-');
-      setText('status', 'Worker not available');
+      setText('status', t('worker_not_available'));
       setText('ping', '-');
       return;
     }
 
     setText('site', status.site || '-');
     setText('speed', status.speedText || '-');
-    setText('status', status.statusText || '-');
+    const state = status.statusState;
+    if (state === 'active') setText('status', t('status_measuring'));
+    else if (state === 'idle') setText('status', t('status_idle'));
+    else if (state === 'error') setText('status', t('status_error'));
+    else setText('status', status.statusText || '-');
     setText('ping', status.pingText || '-');
   };
 

@@ -833,16 +833,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       const speedText = lastRender.unitText
         ? `${lastRender.valueText}${lastRender.unitText}`
         : lastRender.valueText;
-      const statusText =
-        lastRender.state === 'active'
-          ? 'Measuring'
-          : lastRender.state === 'idle'
-            ? 'Idle'
-            : 'Error';
+      const statusState = lastRender.state === 'active' ? 'active' : lastRender.state === 'idle' ? 'idle' : 'error';
+      const statusText = statusState === 'active' ? 'Measuring' : statusState === 'idle' ? 'Idle' : 'Error';
 
       sendResponse({
         site,
         speedText,
+        statusState,
         statusText,
         pingText: 'N/A',
       });

@@ -123,6 +123,11 @@
         color: var(--fg);
         outline: none;
       }
+
+      select option {
+        color: var(--fg);
+        background: var(--card);
+      }
     </style>
   </head>
   <body>
@@ -134,15 +139,15 @@
           <canvas id="pieChart" class="pieCanvas" width="240" height="240"></canvas>
           <div>
             <div class="chartHead">
-              <div class="k">Sledovanosť stránok</div>
+              <div class="k" data-i18n="analytics_title">Website analytics</div>
               <div class="chartTotal" id="totalTime">-</div>
             </div>
             <div class="legend" id="legend"></div>
             <div class="pager" id="pager" style="display:none;">
               <div class="pagerInfo" id="pagerInfo">-</div>
               <div class="pagerBtns">
-                <button class="btn small" id="prevPage" type="button">Prev</button>
-                <button class="btn small" id="nextPage" type="button">Next</button>
+                <button class="btn small" id="prevPage" type="button" data-i18n="prev">Prev</button>
+                <button class="btn small" id="nextPage" type="button" data-i18n="next">Next</button>
               </div>
             </div>
           </div>
@@ -151,31 +156,45 @@
 
       <div class="grid">
         <div class="item">
-          <div class="k">Site</div>
+          <div class="k" data-i18n="site">Site</div>
           <div class="v" id="site">-</div>
         </div>
         <div class="item">
-          <div class="k">Speed</div>
+          <div class="k" data-i18n="speed">Speed</div>
           <div class="v" id="speed">-</div>
         </div>
         <div class="item">
-          <div class="k">Status</div>
+          <div class="k" data-i18n="status">Status</div>
           <div class="v" id="status">-</div>
         </div>
         <div class="item">
-          <div class="k">Ping</div>
+          <div class="k" data-i18n="ping">Ping</div>
           <div class="v" id="ping">-</div>
         </div>
       </div>
 
       <div class="panel" id="settingsPanel">
         <div class="item">
-          <div class="k">Theme</div>
+          <div class="k" data-i18n="language">Language</div>
+          <div class="v" style="margin-top:8px; font-weight:400;">
+            <select id="language">
+              <option value="en">English</option>
+              <option value="de">Deutsch</option>
+              <option value="fr">Français</option>
+              <option value="es">Español</option>
+              <option value="it">Italiano</option>
+              <option value="sk">Slovenčina</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="item">
+          <div class="k" data-i18n="theme">Theme</div>
           <div class="v" style="margin-top:8px; font-weight:400;">
             <select id="themeMode">
-              <option value="auto">Auto</option>
-              <option value="dark">Dark</option>
-              <option value="light">Light</option>
+              <option value="auto" data-i18n="theme_auto">Auto</option>
+              <option value="dark" data-i18n="theme_dark">Dark</option>
+              <option value="light" data-i18n="theme_light">Light</option>
             </select>
           </div>
         </div>
@@ -183,8 +202,8 @@
     </div>
 
     <div class="footer">
-      <button class="btn destructive" id="quitBtn" type="button">Ukončiť</button>
-      <button class="btn iconBtn" id="settingsBtn" type="button" aria-label="Settings">⚙</button>
+      <button class="btn destructive" id="quitBtn" type="button" data-i18n="quit">Quit</button>
+      <button class="btn iconBtn" id="settingsBtn" type="button" aria-label="Settings" data-i18n-aria-label="settings">⚙</button>
     </div>
 
     <script src="settings.js"></script>
