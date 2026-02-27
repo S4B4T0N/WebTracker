@@ -18,6 +18,7 @@ const HARDCODED_SUPABASE_URL = 'https://whryujjatvqqrlawmxqy.supabase.co';
 const HARDCODED_SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indocnl1amphdHZxcXJsYXdteHF5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3MDI3NzAsImV4cCI6MjA4NzI3ODc3MH0.Kn5NlWFgEdOICny3WmRfHf8PdukQ6nPyn2lhZreJF4c';
 
 const SUPABASE_QUEUE_KEY = 'supabaseQueue';
+const SUPABASE_QUEUE_MAX_SIZE = 500;
 
 let themeMode = 'auto';
 let autoTheme = 'dark';
@@ -45,6 +46,18 @@ let lastRender = {
 };
 
 let lastTabUrl = null;
+
+function isRestrictedUrl(url) {
+  if (!url) return true;
+  return (
+    url.startsWith('chrome://') ||
+    url.startsWith('chrome-extension://') ||
+    url.startsWith('edge://') ||
+    url.startsWith('about:') ||
+    url.startsWith('https://chromewebstore.google.com/') ||
+    url.startsWith('https://chrome.google.com/webstore')
+  );
+}
 
 function safeRandomId() {
   try {
@@ -303,8 +316,11 @@ async function uploadTabSessionToSupabase(row) {
 async function enqueueSupabaseRow(row) {
   try {
     const result = await chrome.storage.local.get({ [SUPABASE_QUEUE_KEY]: [] });
-    const queue = Array.isArray(result[SUPABASE_QUEUE_KEY]) ? result[SUPABASE_QUEUE_KEY] : [];
+    let queue = Array.isArray(result[SUPABASE_QUEUE_KEY]) ? result[SUPABASE_QUEUE_KEY] : [];
     queue.push(row);
+    if (queue.length > SUPABASE_QUEUE_MAX_SIZE) {
+      queue = queue.slice(queue.length - SUPABASE_QUEUE_MAX_SIZE);
+    }
     await chrome.storage.local.set({ [SUPABASE_QUEUE_KEY]: queue });
     console.warn('Supabase row queued', { queued: queue.length });
   } catch {
@@ -412,24 +428,8 @@ async function startActiveTabSessionForTab(tabId) {
   };
 }
 
-function isRestrictedUrl(url) {
-  if (!url) return true;
-  return (
-    url.startsWith('chrome://') ||
-    url.startsWith('chrome-extension://') ||
-    url.startsWith('edge://') ||
-    url.startsWith('about:') ||
-    url.startsWith('https://chromewebstore.google.com/') ||
-    url.startsWith('https://chrome.google.com/webstore')
-  );
-}
-
 function clamp(n, min, max) {
   return Math.max(min, Math.min(max, n));
-}
-
-function lerp(a, b, t) {
-  return a + (b - a) * t;
 }
 
 function getEffectiveTheme() {

@@ -417,8 +417,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const start = pageIndex * PAGE_SIZE;
     const pageItems = analyticsRows.slice(start, start + PAGE_SIZE);
 
-    drawPie(pieCanvas, analyticsRows);
-    renderLegend(legendEl, pageItems, start);
+    drawPie(pieCanvas, pageItems);
+    renderLegend(legendEl, pageItems, 0);
 
     if (pagerEl && pagerInfoEl && prevBtn && nextBtn) {
       pagerEl.style.display = totalItems > PAGE_SIZE ? 'flex' : 'none';
