@@ -9,6 +9,7 @@ const HARDCODED_SUPABASE_URL = 'https://whryujjatvqqrlawmxqy.supabase.co';
 const HARDCODED_SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indocnl1amphdHZxcXJsYXdteHF5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3MDI3NzAsImV4cCI6MjA4NzI3ODc3MH0.Kn5NlWFgEdOICny3WmRfHf8PdukQ6nPyn2lhZreJF4c';
 
 const SUPABASE_VIEW = 'v_host_time_by_user';
+const SUPABASE_TABLE = 'tab_sessions';
 const PAGE_SIZE = 5;
 
 const I18N = {
@@ -30,6 +31,9 @@ const I18N = {
     total: 'Total',
     page: 'Page',
     analytics_not_available: 'Analytics not available',
+    range_today: 'Today',
+    range_7d: 'Last 7 days',
+    daily_title: 'Daily totals',
     auth_not_ready: 'Auth not ready (no access token). Check Supabase Email provider + Confirm email OFF.',
     worker_not_available: 'Worker not available',
     status_measuring: 'Measuring',
@@ -54,6 +58,9 @@ const I18N = {
     total: 'Gesamt',
     page: 'Seite',
     analytics_not_available: 'Analyse nicht verfügbar',
+    range_today: 'Heute',
+    range_7d: 'Letzte 7 Tage',
+    daily_title: 'Tägliche Summen',
     auth_not_ready: 'Authentifizierung nicht bereit (kein Zugriffstoken). Prüfe: E-Mail-Provider aktiv + E-Mail-Bestätigung AUS.',
     worker_not_available: 'Worker nicht verfügbar',
     status_measuring: 'Messung',
@@ -78,6 +85,9 @@ const I18N = {
     total: 'Total',
     page: 'Page',
     analytics_not_available: 'Statistiques indisponibles',
+    range_today: "Aujourd'hui",
+    range_7d: '7 derniers jours',
+    daily_title: 'Totaux quotidiens',
     auth_not_ready: "Authentification non prête (aucun jeton d'accès). Vérifie : fournisseur Email activé + confirmation email désactivée.",
     worker_not_available: 'Worker indisponible',
     status_measuring: 'Mesure',
@@ -102,6 +112,9 @@ const I18N = {
     total: 'Total',
     page: 'Página',
     analytics_not_available: 'Analítica no disponible',
+    range_today: 'Hoy',
+    range_7d: 'Últimos 7 días',
+    daily_title: 'Totales diarios',
     auth_not_ready: 'Autenticación no lista (sin token de acceso). Revisa: proveedor Email activo + confirmación de email desactivada.',
     worker_not_available: 'Worker no disponible',
     status_measuring: 'Midiendo',
@@ -126,6 +139,9 @@ const I18N = {
     total: 'Totale',
     page: 'Pagina',
     analytics_not_available: 'Analisi non disponibile',
+    range_today: 'Oggi',
+    range_7d: 'Ultimi 7 giorni',
+    daily_title: 'Totali giornalieri',
     auth_not_ready: "Autenticazione non pronta (nessun token d'accesso). Controlla: provider Email attivo + conferma email disattivata.",
     worker_not_available: 'Worker non disponibile',
     status_measuring: 'Misurazione',
@@ -150,6 +166,9 @@ const I18N = {
     total: 'Spolu',
     page: 'Strana',
     analytics_not_available: 'Štatistiky nie sú dostupné',
+    range_today: 'Dnes',
+    range_7d: 'Posledných 7 dní',
+    daily_title: 'Denné súčty',
     auth_not_ready: 'Prihlásenie nie je pripravené (chýba access token). Skontroluj: Email provider zapnutý + Confirm email vypnuté.',
     worker_not_available: 'Worker nie je dostupný',
     status_measuring: 'Meranie',
@@ -163,6 +182,20 @@ let currentLang = 'en';
 function t(key) {
   const dict = I18N[currentLang] || I18N.en;
   return dict[key] || I18N.en[key] || key;
+}
+
+function startOfLocalDayMs(ts) {
+  const d = new Date(Number(ts));
+  d.setHours(0, 0, 0, 0);
+  return d.getTime();
+}
+
+function formatDayLabel(ts) {
+  const d = new Date(Number(ts));
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
 }
 
 async function getLanguage() {
@@ -379,6 +412,104 @@ async function fetchAnalytics() {
   }
 }
 
+function getRangeWindowMs(rangeValue) {
+  const now = Date.now();
+  if (rangeValue === '7d') {
+    const todayStart = startOfLocalDayMs(now);
+    const from = todayStart - 6 * 24 * 60 * 60 * 1000;
+    return { fromMs: from, toMs: now };
+  }
+  const fromMs = startOfLocalDayMs(now);
+  return { fromMs, toMs: now };
+}
+
+async function fetchSessions(rangeValue) {
+  const cfg = await getSupabaseConfig();
+  if (!cfg.url || !cfg.anonKey) return { ok: false, error: 'Missing Supabase config' };
+
+  const accessToken = await getSupabaseAccessTokenFromWorker();
+  if (!accessToken) return { ok: false, error: t('auth_not_ready') };
+
+  const { fromMs, toMs } = getRangeWindowMs(rangeValue);
+
+  const base = cfg.url.replace(/\/+$/, '');
+  const endpoint =
+    `${base}/rest/v1/${encodeURIComponent(SUPABASE_TABLE)}` +
+    `?select=host,duration_ms,start_ts_ms,end_ts_ms` +
+    `&install_id=eq.${encodeURIComponent(cfg.installId)}` +
+    `&end_ts_ms=gte.${fromMs}` +
+    `&end_ts_ms=lte.${toMs}`;
+
+  try {
+    const res = await fetch(endpoint, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        apikey: cfg.anonKey,
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    if (!res.ok) {
+      const text = await res.text().catch(() => '');
+      return { ok: false, error: `HTTP ${res.status} ${res.statusText}${text ? `: ${text}` : ''}` };
+    }
+    const data = await res.json();
+    return { ok: true, data: Array.isArray(data) ? data : [] };
+  } catch (e) {
+    return { ok: false, error: String(e?.message || e) };
+  }
+}
+
+function renderDailyTotals(container, sessions, rangeValue) {
+  if (!container) return;
+  container.innerHTML = '';
+
+  const { fromMs, toMs } = getRangeWindowMs(rangeValue);
+
+  const totalsByDay = new Map();
+  for (const s of sessions) {
+    const endTs = Number(s?.end_ts_ms);
+    const dur = Number(s?.duration_ms) || 0;
+    if (!Number.isFinite(endTs) || dur <= 0) continue;
+    const dayStart = startOfLocalDayMs(endTs);
+    totalsByDay.set(dayStart, (totalsByDay.get(dayStart) || 0) + dur);
+  }
+
+  const dayStartFrom = startOfLocalDayMs(fromMs);
+  const dayStartTo = startOfLocalDayMs(toMs);
+  for (let day = dayStartFrom; day <= dayStartTo; day += 24 * 60 * 60 * 1000) {
+    const row = document.createElement('div');
+    row.className = 'legendRow';
+
+    const left = document.createElement('div');
+    left.className = 'legendLeft';
+
+    const dot = document.createElement('span');
+    dot.className = 'dot';
+    dot.style.background = 'rgba(120,120,128,0.35)';
+
+    const label = document.createElement('span');
+    label.className = 'legendHost';
+    label.textContent = formatDayLabel(day);
+
+    left.appendChild(dot);
+    left.appendChild(label);
+
+    const leader = document.createElement('span');
+    leader.className = 'leader';
+
+    const time = document.createElement('span');
+    time.className = 'legendTime';
+    time.textContent = formatDuration(totalsByDay.get(day) || 0);
+
+    row.appendChild(left);
+    row.appendChild(leader);
+    row.appendChild(time);
+
+    container.appendChild(row);
+  }
+}
+
 async function getStatusFromWorker() {
   try {
     return await chrome.runtime.sendMessage({ type: 'getStatus' });
@@ -400,10 +531,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   const pieCanvas = document.getElementById('pieChart');
   const legendEl = document.getElementById('legend');
   const totalTimeEl = document.getElementById('totalTime');
+  const dailyLegendEl = document.getElementById('dailyLegend');
   const pagerEl = document.getElementById('pager');
   const pagerInfoEl = document.getElementById('pagerInfo');
   const prevBtn = document.getElementById('prevPage');
   const nextBtn = document.getElementById('nextPage');
+
+  const rangeSelect = document.getElementById('range');
+  let currentRange = rangeSelect && typeof rangeSelect.value === 'string' ? rangeSelect.value : 'today';
 
   let analyticsRows = [];
   let pageIndex = 0;
@@ -442,8 +577,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   const refreshAnalytics = async () => {
-    const result = await fetchAnalytics();
-    if (!result.ok) {
+    const sessionsRes = await fetchSessions(currentRange);
+    if (!sessionsRes.ok) {
       analyticsRows = [];
       drawPie(pieCanvas, []);
       if (totalTimeEl) totalTimeEl.textContent = '-';
@@ -452,28 +587,39 @@ document.addEventListener('DOMContentLoaded', async () => {
         const row = document.createElement('div');
         row.className = 'k';
         row.textContent = t('analytics_not_available');
-        row.title = result.error;
+        row.title = sessionsRes.error;
         legendEl.appendChild(row);
 
         const err = document.createElement('div');
         err.className = 'k';
-        err.textContent = String(result.error || 'Unknown error');
+        err.textContent = String(sessionsRes.error || 'Unknown error');
         legendEl.appendChild(err);
+      }
+      if (dailyLegendEl) {
+        dailyLegendEl.innerHTML = '';
       }
       if (pagerEl) pagerEl.style.display = 'none';
       return;
     }
 
-    analyticsRows = result.data
-      .map((r) => ({
-        host: r?.host,
-        total_duration_ms: r?.total_duration_ms,
-        sessions: r?.sessions,
-      }))
-      .filter((r) => r.host && Number(r.total_duration_ms) > 0);
+    const sessions = sessionsRes.data;
+
+    const totalsByHost = new Map();
+    for (const s of sessions) {
+      const host = typeof s?.host === 'string' ? s.host : null;
+      const dur = Number(s?.duration_ms) || 0;
+      if (!host || dur <= 0) continue;
+      totalsByHost.set(host, (totalsByHost.get(host) || 0) + dur);
+    }
+
+    analyticsRows = Array.from(totalsByHost.entries())
+      .map(([host, total_duration_ms]) => ({ host, total_duration_ms }))
+      .sort((a, b) => (Number(b.total_duration_ms) || 0) - (Number(a.total_duration_ms) || 0));
 
     const totalMs = analyticsRows.reduce((sum, r) => sum + (Number(r.total_duration_ms) || 0), 0);
     if (totalTimeEl) totalTimeEl.textContent = `${t('total')} ${formatDuration(totalMs)}`;
+
+    renderDailyTotals(dailyLegendEl, sessions, currentRange);
 
     renderPage();
   };
@@ -498,6 +644,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       renderPage();
       await refreshAnalytics();
       await refresh();
+    });
+  }
+
+  if (rangeSelect) {
+    rangeSelect.addEventListener('change', async () => {
+      currentRange = rangeSelect.value === '7d' ? '7d' : 'today';
+      pageIndex = 0;
+      await refreshAnalytics();
     });
   }
 
