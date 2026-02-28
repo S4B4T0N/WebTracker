@@ -69,6 +69,12 @@
       .btn.small { padding: 6px 8px; border-radius: 10px; font-size: 12px; }
       .btn:disabled { opacity: 0.45; cursor: default; }
       .grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+      .barList { display: grid; gap: 8px; margin-top: 8px; }
+      .barRow { display: grid; grid-template-columns: 56px 1fr 64px; align-items: center; gap: 10px; }
+      .barLabel { font-size: 12px; color: var(--fg); font-weight: 600; font-variant-numeric: tabular-nums; }
+      .barTrack { height: 10px; border-radius: 999px; background: rgba(120, 120, 128, 0.14); overflow: hidden; }
+      .barFill { height: 100%; border-radius: 999px; background: var(--blue); width: 0%; }
+      .barValue { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; text-align: right; }
       .item {
         background: var(--card);
         border-radius: 14px;
@@ -152,6 +158,7 @@
               <div class="k" data-i18n="analytics_title">Website analytics</div>
               <div class="chartRight">
                 <select id="range" class="chartSelect" aria-label="Range">
+                  <option value="1h" data-i18n="range_1h">Last hour</option>
                   <option value="today" data-i18n="range_today">Today</option>
                   <option value="7d" data-i18n="range_7d">Last 7 days</option>
                 </select>
@@ -172,7 +179,7 @@
 
       <div class="item" aria-label="Daily totals">
         <div class="k" data-i18n="daily_title">Daily totals</div>
-        <div class="legend" id="dailyLegend" style="margin-top:8px;"></div>
+        <canvas id="lineChart" width="820" height="300" style="width:100%;height:150px;margin-top:8px;display:block;"></canvas>
       </div>
 
       <div class="grid">
