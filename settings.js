@@ -39,6 +39,15 @@ const I18N = {
     status_measuring: 'Measuring',
     status_idle: 'Idle',
     status_error: 'Error',
+    st_ping: 'Ping',
+    st_download: 'Download',
+    st_upload: 'Upload',
+    st_jitter: 'Jitter',
+    st_testing_ping: 'Testing ping…',
+    st_testing_download: 'Testing download…',
+    st_testing_upload: 'Testing upload…',
+    st_done: 'Done',
+    st_error: 'Test failed',
   },
   de: {
     analytics_title: 'Website-Analyse',
@@ -69,6 +78,15 @@ const I18N = {
     status_measuring: 'Messung',
     status_idle: 'Leerlauf',
     status_error: 'Fehler',
+    st_ping: 'Ping',
+    st_download: 'Download',
+    st_upload: 'Upload',
+    st_jitter: 'Jitter',
+    st_testing_ping: 'Ping wird getestet…',
+    st_testing_download: 'Download wird getestet…',
+    st_testing_upload: 'Upload wird getestet…',
+    st_done: 'Fertig',
+    st_error: 'Test fehlgeschlagen',
   },
   fr: {
     analytics_title: 'Statistiques des sites',
@@ -99,6 +117,15 @@ const I18N = {
     status_measuring: 'Mesure',
     status_idle: 'Inactif',
     status_error: 'Erreur',
+    st_ping: 'Ping',
+    st_download: 'Téléchargement',
+    st_upload: 'Envoi',
+    st_jitter: 'Gigue',
+    st_testing_ping: 'Test du ping…',
+    st_testing_download: 'Test du téléchargement…',
+    st_testing_upload: "Test de l'envoi…",
+    st_done: 'Terminé',
+    st_error: 'Test échoué',
   },
   es: {
     analytics_title: 'Analítica de sitios',
@@ -129,6 +156,15 @@ const I18N = {
     status_measuring: 'Midiendo',
     status_idle: 'Inactivo',
     status_error: 'Error',
+    st_ping: 'Ping',
+    st_download: 'Descarga',
+    st_upload: 'Subida',
+    st_jitter: 'Jitter',
+    st_testing_ping: 'Probando ping…',
+    st_testing_download: 'Probando descarga…',
+    st_testing_upload: 'Probando subida…',
+    st_done: 'Listo',
+    st_error: 'Prueba fallida',
   },
   it: {
     analytics_title: 'Analisi dei siti',
@@ -159,6 +195,15 @@ const I18N = {
     status_measuring: 'Misurazione',
     status_idle: 'Inattivo',
     status_error: 'Errore',
+    st_ping: 'Ping',
+    st_download: 'Download',
+    st_upload: 'Upload',
+    st_jitter: 'Jitter',
+    st_testing_ping: 'Test del ping…',
+    st_testing_download: 'Test del download…',
+    st_testing_upload: "Test dell'upload…",
+    st_done: 'Fatto',
+    st_error: 'Test fallito',
   },
   sk: {
     analytics_title: 'Sledovanosť stránok',
@@ -189,6 +234,15 @@ const I18N = {
     status_measuring: 'Meranie',
     status_idle: 'Nečinné',
     status_error: 'Chyba',
+    st_ping: 'Ping',
+    st_download: 'Sťahovanie',
+    st_upload: 'Nahrávanie',
+    st_jitter: 'Jitter',
+    st_testing_ping: 'Meranie ping…',
+    st_testing_download: 'Meranie sťahovania…',
+    st_testing_upload: 'Meranie nahrávania…',
+    st_done: 'Hotovo',
+    st_error: 'Test zlyhal',
   },
 };
 
@@ -604,6 +658,109 @@ async function getStatusFromWorker() {
   }
 }
 
+async function measurePing(url, count = 5) {
+  const times = [];
+  for (let i = 0; i < count; i++) {
+    const t0 = performance.now();
+    try {
+      await fetch(url, { method: 'HEAD', mode: 'no-cors', cache: 'no-store' });
+    } catch { /* still measures round-trip */ }
+    times.push(performance.now() - t0);
+  }
+  times.sort((a, b) => a - b);
+  const avg = times.reduce((s, v) => s + v, 0) / times.length;
+  const jitter = times.length > 1
+    ? times.slice(1).reduce((s, v, i) => s + Math.abs(v - times[i]), 0) / (times.length - 1)
+    : 0;
+  return { ping: Math.round(avg), jitter: Math.round(jitter * 10) / 10 };
+}
+
+async function measureDownload(url, durationMs = 4000) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), durationMs + 2000);
+  let totalBytes = 0;
+  const t0 = performance.now();
+  try {
+    const res = await fetch(url + '?bytes=26214400&cachebust=' + Date.now(), {
+      cache: 'no-store',
+      signal: controller.signal,
+    });
+    const reader = res.body.getReader();
+    while (true) {
+      const elapsed = performance.now() - t0;
+      if (elapsed > durationMs) { reader.cancel(); break; }
+      const { done, value } = await reader.read();
+      if (done) break;
+      totalBytes += value.byteLength;
+    }
+  } catch { /* aborted or error */ }
+  clearTimeout(timeout);
+  const elapsed = (performance.now() - t0) / 1000;
+  const mbps = elapsed > 0 ? (totalBytes * 8) / (elapsed * 1000 * 1000) : 0;
+  return Math.round(mbps * 100) / 100;
+}
+
+async function measureUpload(url, durationMs = 4000) {
+  const chunkSize = 1024 * 1024;
+  const blob = new Blob([new ArrayBuffer(chunkSize)]);
+  let totalBytes = 0;
+  const t0 = performance.now();
+  while (performance.now() - t0 < durationMs) {
+    try {
+      await fetch(url + '?cachebust=' + Date.now(), {
+        method: 'POST',
+        body: blob,
+        mode: 'no-cors',
+        cache: 'no-store',
+      });
+      totalBytes += chunkSize;
+    } catch { break; }
+  }
+  const elapsed = (performance.now() - t0) / 1000;
+  const mbps = elapsed > 0 ? (totalBytes * 8) / (elapsed * 1000 * 1000) : 0;
+  return Math.round(mbps * 100) / 100;
+}
+
+async function runSpeedTest(els) {
+  const { goBtn, phaseEl, pingEl, downEl, upEl, jitterEl } = els;
+
+  goBtn.classList.add('running');
+  goBtn.classList.remove('done');
+  goBtn.textContent = '···';
+  pingEl.textContent = '-';
+  downEl.textContent = '-';
+  upEl.textContent = '-';
+  jitterEl.textContent = '-';
+
+  const CF_TRACE = 'https://speed.cloudflare.com/__down';
+  const CF_UP = 'https://speed.cloudflare.com/__up';
+  const PING_URL = 'https://1.1.1.1/cdn-cgi/trace';
+
+  try {
+    phaseEl.textContent = t('st_testing_ping');
+    const { ping, jitter } = await measurePing(PING_URL, 6);
+    pingEl.textContent = String(ping);
+    jitterEl.textContent = jitter.toFixed(1);
+
+    phaseEl.textContent = t('st_testing_download');
+    const down = await measureDownload(CF_TRACE, 5000);
+    downEl.textContent = down.toFixed(2);
+
+    phaseEl.textContent = t('st_testing_upload');
+    const up = await measureUpload(CF_UP, 4000);
+    upEl.textContent = up.toFixed(2);
+
+    phaseEl.textContent = t('st_done');
+    goBtn.classList.remove('running');
+    goBtn.classList.add('done');
+    goBtn.textContent = 'GO';
+  } catch (e) {
+    phaseEl.textContent = `${t('st_error')}: ${e.message || e}`;
+    goBtn.classList.remove('running');
+    goBtn.textContent = 'GO';
+  }
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   currentLang = await getLanguage();
   applyTranslations(document);
@@ -613,6 +770,30 @@ document.addEventListener('DOMContentLoaded', async () => {
   const settingsBtn = document.getElementById('settingsBtn');
   const settingsPanel = document.getElementById('settingsPanel');
   const quitBtn = document.getElementById('quitBtn');
+
+  const goBtn = document.getElementById('goBtn');
+  const stPhaseEl = document.getElementById('stPhase');
+  const stPingEl = document.getElementById('stPing');
+  const stDownEl = document.getElementById('stDown');
+  const stUpEl = document.getElementById('stUp');
+  const stJitterEl = document.getElementById('stJitter');
+  let speedTestRunning = false;
+
+  if (goBtn) {
+    goBtn.addEventListener('click', async () => {
+      if (speedTestRunning) return;
+      speedTestRunning = true;
+      await runSpeedTest({
+        goBtn,
+        phaseEl: stPhaseEl,
+        pingEl: stPingEl,
+        downEl: stDownEl,
+        upEl: stUpEl,
+        jitterEl: stJitterEl,
+      });
+      speedTestRunning = false;
+    });
+  }
 
   const pieCanvas = document.getElementById('pieChart');
   const legendEl = document.getElementById('legend');

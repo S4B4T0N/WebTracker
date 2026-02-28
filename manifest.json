@@ -7,7 +7,9 @@
     "service_worker": "service_worker.js"
   },
   "host_permissions": [
-    "https://whryujjatvqqrlawmxqy.supabase.co/*"
+    "https://whryujjatvqqrlawmxqy.supabase.co/*",
+    "https://speed.cloudflare.com/*",
+    "https://1.1.1.1/*"
   ],
   "permissions": [
     "debugger",

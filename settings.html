@@ -144,11 +144,58 @@
         color: var(--fg);
         background: var(--card);
       }
+
+      .speedTest { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 16px 12px; }
+      .goBtn {
+        width: 80px; height: 80px; border-radius: 50%; border: 3px solid #ff3b30;
+        background: transparent; color: #ff3b30; font-size: 22px; font-weight: 800;
+        letter-spacing: 1px; cursor: pointer; transition: all 0.2s ease;
+        display: flex; align-items: center; justify-content: center;
+      }
+      .goBtn:hover { background: rgba(255, 59, 48, 0.08); }
+      .goBtn:active { background: rgba(255, 59, 48, 0.18); transform: scale(0.95); }
+      .goBtn.running { border-color: var(--muted); color: var(--muted); cursor: default; }
+      .goBtn.done { border-color: #34c759; color: #34c759; }
+      .stPhase { font-size: 11px; color: var(--muted); min-height: 16px; }
+      .stResults { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; width: 100%; }
+      .stMetric { text-align: center; }
+      .stMetric .stLabel { font-size: 10px; color: var(--muted); margin-bottom: 2px; }
+      .stMetric .stValue { font-size: 15px; font-weight: 700; color: var(--fg); font-variant-numeric: tabular-nums; }
+      .stMetric .stUnit { font-size: 10px; color: var(--muted); }
     </style>
   </head>
   <body>
     <div class="wrap">
       <div class="title">WebTracker</div>
+
+      <div class="item" aria-label="Speed test" style="margin-bottom:12px;">
+        <div class="speedTest">
+          <button class="goBtn" id="goBtn" type="button">GO</button>
+          <div class="stPhase" id="stPhase"></div>
+          <div class="stResults">
+            <div class="stMetric">
+              <div class="stLabel" data-i18n="st_ping">Ping</div>
+              <div class="stValue" id="stPing">-</div>
+              <div class="stUnit">ms</div>
+            </div>
+            <div class="stMetric">
+              <div class="stLabel" data-i18n="st_download">Download</div>
+              <div class="stValue" id="stDown">-</div>
+              <div class="stUnit">Mbps</div>
+            </div>
+            <div class="stMetric">
+              <div class="stLabel" data-i18n="st_upload">Upload</div>
+              <div class="stValue" id="stUp">-</div>
+              <div class="stUnit">Mbps</div>
+            </div>
+            <div class="stMetric">
+              <div class="stLabel" data-i18n="st_jitter">Jitter</div>
+              <div class="stValue" id="stJitter">-</div>
+              <div class="stUnit">ms</div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div class="item chartCard" aria-label="Site analytics">
         <div class="chartWrap">
