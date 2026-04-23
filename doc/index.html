@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="sk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WebTracker — prezentačná stránka</title>
+  <meta name="description" content="WebTracker je rozšírenie pre Chromium prehliadače, ktoré sleduje čas strávený na aktívnych stránkach, zobrazuje tok dát a pripravuje prehľad používania webu." />
+  <meta name="theme-color" content="#0b1020" />
+  <link rel="icon" href="assets/webtracker-icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="container nav">
+      <a class="brand" href="#top">
+        <img src="assets/webtracker-icon.svg" alt="WebTracker logo" />
+        <span class="brand-text">
+          <span class="brand-title">WebTracker</span>
+          <span class="brand-sub">Chromium browser extension</span>
+        </span>
+      </a>
+      <nav class="nav-links" aria-label="Hlavná navigácia">
+        <a href="#funkcie">Funkcie</a>
+        <a href="#ako-funguje">Ako funguje</a>
+        <a href="#ukazky">Ukážky</a>
+        <a href="#sukromie">Súkromie</a>
+        <a href="#technologie">Technológie</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="badge">Hotový školský produkt • GitHub Pages landing page</span>
+          <h1>Prehľad používania webu v reálnom čase, priamo v prehliadači.</h1>
+          <p>
+            WebTracker je rozšírenie pre prehliadače s jadrom Chromium. Sleduje čas
+            strávený na aktívnych kartách, zobrazuje tok dát a vytvára prehľad o tom,
+            ako používateľ pracuje s webom počas bežného prehliadania.
+          </p>
+          <div class="actions">
+            <a class="button primary" href="#ukazky">Pozrieť ukážky</a>
+            <a class="button secondary" href="privacy-policy.html">Privacy Policy</a>
+          </div>
+          <div class="metrics">
+            <div class="metric">
+              <span class="muted small">Platforma</span>
+              <strong>Chromium / MV3</strong>
+            </div>
+            <div class="metric">
+              <span class="muted small">Hlavný účel</span>
+              <strong>čas + sieťová aktivita</strong>
+            </div>
+            <div class="metric">
+              <span class="muted small">Ukladanie dát</span>
+              <strong>lokálne + anonymne</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="preview-card" aria-label="Vizualizácia rozhrania WebTrackeru">
+          <div class="browser-frame">
+            <div class="browser-top">
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <div class="browser-url">chrome-extension://webtracker</div>
+            </div>
+            <div class="browser-body">
+              <div class="preview-left">
+                <div class="panel">
+                  <div class="preview-title">Analýza aktívnej karty</div>
+                  <div class="chart">
+                    <svg viewBox="0 0 420 150" preserveAspectRatio="none" aria-hidden="true">
+                      <defs>
+                        <linearGradient id="line-gradient" x1="0" y1="0" x2="1" y2="0">
+                          <stop offset="0%" stop-color="#3b82f6" />
+                          <stop offset="100%" stop-color="#06b6d4" />
+                        </linearGradient>
+                      </defs>
+                      <line class="grid" x1="0" y1="30" x2="420" y2="30" />
+                      <line class="grid" x1="0" y1="75" x2="420" y2="75" />
+                      <line class="grid" x1="0" y1="120" x2="420" y2="120" />
+                      <path class="area" d="M0,124 L0,118 L50,94 L100,108 L150,78 L200,88 L250,48 L300,70 L350,32 L420,52 L420,150 L0,150 Z" />
+                      <path class="line" d="M0,118 L50,94 L100,108 L150,78 L200,88 L250,48 L300,70 L350,32 L420,52" />
+                    </svg>
+                  </div>
+                  <div class="stat-grid">
+                    <div class="stat-box">
+                      <div class="label">Ping</div>
+                      <div class="value">24 ms</div>
+                    </div>
+                    <div class="stat-box">
+                      <div class="label">Download</div>
+                      <div class="value">3.8 MB/s</div>
+                    </div>
+                    <div class="stat-box">
+                      <div class="label">Upload</div>
+                      <div class="value">0.7 MB/s</div>
+                    </div>
+                    <div class="stat-box">
+                      <div class="label">Jitter</div>
+                      <div class="value">8 ms</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <aside class="preview-right">
+                <div class="panel">
+                  <div class="preview-title">Aktívna stránka</div>
+                  <div class="list">
+                    <div class="list-item"><span>Doména</span><strong>openai.com</strong></div>
+                    <div class="list-item"><span>Čas relácie</span><strong>18m 24s</strong></div>
+                    <div class="list-item"><span>Počet requestov</span><strong>142</strong></div>
+                    <div class="list-item"><span>Stav</span><strong style="color:#86efac">Aktívne sledovanie</strong></div>
+                  </div>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="funkcie">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Čo WebTracker prináša</h2>
+          </div>
+          <p>
+            Stránka je pripravená ako produktová prezentácia pre predmet aj pre GitHub Pages.
+            Zdôrazňuje hlavné funkcie, technické pozadie a dôraz na ochranu súkromia.
+          </p>
+        </div>
+        <div class="feature-grid">
+          <article class="card">
+            <div class="icon">⏱️</div>
+            <h3>Meranie času na weboch</h3>
+            <p>Rozšírenie sleduje, koľko času používateľ trávi na aktívnych kartách a vytvára prehľad podľa webov a domén.</p>
+          </article>
+          <article class="card">
+            <div class="icon">📶</div>
+            <h3>Tok dát v reálnom čase</h3>
+            <p>WebTracker zobrazuje aktuálnu sieťovú aktivitu otvorenej stránky a pomáha rýchlo identifikovať náročnejšie weby.</p>
+          </article>
+          <article class="card">
+            <div class="icon">📊</div>
+            <h3>Prehľadné štatistiky</h3>
+            <p>Vizuálne karty, súhrny a grafy robia z technických údajov zrozumiteľný dashboard pre bežného používateľa.</p>
+          </article>
+          <article class="card">
+            <div class="icon">🧩</div>
+            <h3>Chromium kompatibilita</h3>
+            <p>Projekt je navrhnutý pre Manifest V3, takže je vhodný pre Chrome, Edge, Brave, Operu a ďalšie Chromium prehliadače.</p>
+          </article>
+          <article class="card">
+            <div class="icon">🔒</div>
+            <h3>Dôraz na súkromie</h3>
+            <p>Dáta sa ukladajú lokálne a pri rozšírenom režime iba anonymne. Stránka obsahuje aj samostatnú Privacy Policy.</p>
+          </article>
+          <article class="card">
+            <div class="icon">⚙️</div>
+            <h3>Pripravené pre release</h3>
+            <p>Stránka dopĺňa ikonu, screenshoty, opis produktu a ďalšie podklady, ktoré sa hodia aj do Chrome Web Store.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="ako-funguje">
+      <div class="container split">
+        <div>
+          <div class="section-head">
+            <div><h2>Ako funguje</h2></div>
+            <p>Tok používateľskej práce je navrhnutý jednoducho: aktivita sa zachytáva na úrovni karty, prepočíta sa na metriky a zobrazí sa v prehľadnom rozhraní.</p>
+          </div>
+          <div class="steps">
+            <div class="step">
+              <div class="step-number">1</div>
+              <div>
+                <strong>Detekcia aktívnej karty</strong>
+                <p class="muted">Rozšírenie identifikuje otvorenú stránku, zmeny URL a čas, ktorý používateľ na danej karte naozaj trávi.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-number">2</div>
+              <div>
+                <strong>Zber metrík</strong>
+                <p class="muted">Zachytávajú sa údaje potrebné na výpočet času, tok dát a ďalšie sieťové ukazovatele pre aktívny web.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-number">3</div>
+              <div>
+                <strong>Lokálne uloženie a analýza</strong>
+                <p class="muted">Údaje sa spracujú a uložia tak, aby z nich bolo možné vytvárať súhrny, grafy a výpisy podľa domén.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-number">4</div>
+              <div>
+                <strong>Zobrazenie výsledkov</strong>
+                <p class="muted">Používateľ dostane okamžitý prehľad o aktívnej stránke aj dlhodobejší obraz o svojom prehliadaní.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-head">
+            <div><h2>Pre koho je určený</h2></div>
+            <p>WebTracker je vhodný ako študijný projekt aj ako praktický nástroj pre používateľov, ktorí chcú mať väčšiu kontrolu nad tým, ako využívajú web.</p>
+          </div>
+          <div class="tech-list">
+            <div class="bullet"><strong>Študent / vývojár:</strong> dokumentácia projektu, produktová stránka a technická architektúra na jednom mieste.</div>
+            <div class="bullet"><strong>Bežný používateľ:</strong> rýchly prehľad o tom, ktoré stránky berú najviac času a dát.</div>
+            <div class="bullet"><strong>Tester produktu:</strong> jednoduchá ukážka funkcie, vizuálne screenshoty a samostatná stránka s pravidlami ochrany súkromia.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="ukazky">
+      <div class="container">
+        <div class="section-head">
+          <div><h2>Ukážky projektu</h2></div>
+          <p>Nižšie sú pripravené ilustračné zábery z publikácie rozšírenia a analytických obrazoviek. Po nahratí do repozitára ich môžeš ľahko nahradiť vlastnými finálnymi screenshotmi aplikácie.</p>
+        </div>
+        <div class="gallery">
+          <figure class="shot">
+            <img src="assets/store-listing.png" alt="Chrome Web Store listing pre WebTracker" />
+            <figcaption class="caption">
+              <strong>Store listing</strong>
+              <p>Pripravený záznam v obchode s ikonou, stručným opisom produktu a miestom pre prezentačné screenshoty.</p>
+            </figcaption>
+          </figure>
+          <figure class="shot">
+            <img src="assets/privacy-review.png" alt="Ochrana súkromia a povolenia WebTrackeru" />
+            <figcaption class="caption">
+              <strong>Privacy a permissions</strong>
+              <p>Zhrnutie účelu rozšírenia a odôvodnenie povolení, ktoré súvisia so sledovaním aktívnej stránky a ukladaním údajov.</p>
+            </figcaption>
+          </figure>
+          <figure class="shot">
+            <img src="assets/analytics.png" alt="Analytický prehľad pre WebTracker" />
+            <figcaption class="caption">
+              <strong>Analytický pohľad</strong>
+              <p>Ukážka metriky zobrazení a trendov, ktorá podporuje myšlienku prehľadného dashboardu aj ďalšieho rozvoja produktu.</p>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="sukromie">
+      <div class="container split">
+        <div>
+          <div class="section-head">
+            <div><h2>Ochrana súkromia</h2></div>
+            <p>Produktová stránka má jasne komunikovať, čo extension robí, aké dáta používa a prečo. To je dôležité pre používateľa aj pre kontrolu v store.</p>
+          </div>
+          <div class="privacy-list">
+            <div class="bullet">WebTracker pracuje s údajmi o aktívnej stránke, čase strávenom na weboch a sieťovej aktivite.</div>
+            <div class="bullet">Ukladanie je riešené tak, aby bol používateľský prehľad dostupný priamo v rozšírení a bez potreby osobných údajov.</div>
+            <div class="bullet">Samostatná stránka <span class="code">privacy-policy.html</span> je pripravená pre GitHub Pages aj Chrome Web Store.</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-head">
+            <div><h2>Prečo táto stránka funguje pre predmet</h2></div>
+            <p>Spĺňa požiadavku na prezentačnú stránku produktu a zároveň z nej vieš urobiť verejnú landing page pre projektový pitch.</p>
+          </div>
+          <div class="tech-list">
+            <div class="bullet"><strong>Produktová identita:</strong> názov, účel, vizuál a hlavné výhody.</div>
+            <div class="bullet"><strong>Ukážky:</strong> screenshoty, ktoré môžeš ďalej rozšíriť na 4 až 10 finálnych obrázkov.</div>
+            <div class="bullet"><strong>Pitch podklad:</strong> hotový text pre sekcie funkcie, technológie, súkromie a nasadenie.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="technologie">
+      <div class="container">
+        <div class="section-head">
+          <div><h2>Technologický základ</h2></div>
+          <p>Text je písaný tak, aby pôsobil profesionálne, ale zostal zrozumiteľný aj pre školskú prezentáciu a verejný produktový web.</p>
+        </div>
+        <div class="feature-grid">
+          <article class="card">
+            <div class="icon">🧠</div>
+            <h3>Manifest V3</h3>
+            <p>Architektúra postavená na modernom modeli rozšírení pre prehliadače s jadrom Chromium.</p>
+          </article>
+          <article class="card">
+            <div class="icon">🖥️</div>
+            <h3>Service worker</h3>
+            <p>Logika beží na pozadí a zabezpečuje zber udalostí, prepočet metrík a komunikáciu s rozhraním rozšírenia.</p>
+          </article>
+          <article class="card">
+            <div class="icon">☁️</div>
+            <h3>Anonymná analytika</h3>
+            <p>Projekt ráta s lokálnym ukladaním a s možnosťou anonymného backendového spracovania podľa potreby.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="cta">
+          <div>
+            <h2 style="margin:0 0 10px; font-size: clamp(1.5rem, 2vw, 2.2rem);">WebTracker je pripravený na GitHub Pages.</h2>
+            <p class="muted" style="margin:0; max-width:60ch;">Do repozitára stačí nahrať <span class="code">index.html</span>, <span class="code">styles.css</span>, priečinok <span class="code">assets/</span> a voliteľne upraviť odkazy na GitHub, Chrome Store alebo demo video.</p>
+          </div>
+          <div class="actions" style="margin-top:0;">
+            <a class="button primary" href="privacy-policy.html">Otvoriť Privacy Policy</a>
+            <a class="button secondary" href="#top">Späť hore</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      WebTracker — prezentačná stránka produktu pre GitHub Pages. <span class="muted">Pripravené na ďalšie doplnenie o finálne screenshoty, GitHub link a Chrome Web Store odkaz.</span>
+    </div>
+  </footer>
+</body>
+</html>
